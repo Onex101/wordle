@@ -41,7 +41,7 @@ body {
 
 .tile.present {
     background-color: yellow;
-    color: white;
+    color: #333;
 }
 
 .tile.absent {
