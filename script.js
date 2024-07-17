@@ -47,13 +47,37 @@ document.addEventListener('DOMContentLoaded', () => {
         const row = board.children[currentRow];
         row.innerHTML = '';
 
-        guess.split('').forEach((letter, index) => {
+        const answerArr = answer.split('');
+        const guessArr = guess.split('');
+        const correct = [];
+        const present = [];
+
+        // First, mark the correct letters
+        guessArr.forEach((letter, index) => {
+            if (letter === answerArr[index]) {
+                correct.push(index);
+                answerArr[index] = null; // Mark as used
+            }
+        });
+
+        // Second, mark the present letters
+        guessArr.forEach((letter, index) => {
+            if (correct.includes(index)) return;
+            const pos = answerArr.indexOf(letter);
+            if (pos !== -1) {
+                present.push(index);
+                answerArr[pos] = null; // Mark as used
+            }
+        });
+
+        // Create tiles and add classes
+        guessArr.forEach((letter, index) => {
             const tile = document.createElement('div');
             tile.classList.add('tile');
 
-            if (letter === answer[index]) {
+            if (correct.includes(index)) {
                 tile.classList.add('correct');
-            } else if (answer.includes(letter)) {
+            } else if (present.includes(index)) {
                 tile.classList.add('present');
             } else {
                 tile.classList.add('absent');
@@ -98,7 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
         showMessage('');
     });
 });
-
 
 document.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
